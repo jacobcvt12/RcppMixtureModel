@@ -6,7 +6,7 @@ Description: Fast MCMC procedure for Mixture Models
 Depends: 
     R (>= 3.2.3)
 Imports: Rcpp
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 License: GPL-3
 LazyData: true
 RoxygenNote: 5.0.1
