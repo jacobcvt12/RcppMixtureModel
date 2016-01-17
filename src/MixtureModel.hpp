@@ -12,6 +12,8 @@ class MixtureModel {
     unsigned int _nBurn;     // number of burnin iterations
     unsigned int _nSample;   // number of posterior samples
     unsigned int _k;         // number of components
+    unsigned int _s;         // current posterior iteration
+    unsigned int _b;         // current burnin iteration
 
     // data
     arma::vec _data;
@@ -23,9 +25,9 @@ class MixtureModel {
     arma::vec _lambda;      // proportions
     std::vector<int> _z;    // latent assignment
 
-    void update_theta();
-    void update_sigma();
-    void update_lambda();
+    void update_theta(bool save=false);
+    void update_sigma(bool save=false);
+    void update_lambda(bool save=false);
     void update_z();
 
   public:

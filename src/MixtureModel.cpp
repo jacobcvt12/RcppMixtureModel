@@ -11,6 +11,8 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     _nBurn = burnin;
     _nSample = sample;
     _k = k;
+    _s = 0;
+    _b = 0;
 
     // initial values to parameters from prior
     _theta = rnorm(_k, 0.0, 1000.0);
