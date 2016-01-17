@@ -3,6 +3,7 @@
 
 #include "distributions.hpp"
 #include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include <vector>
 // [[Rcpp::depends(RcppArmadillo)]]
 
@@ -50,6 +51,7 @@ class MixtureModel {
     // main methods
     void run_burnin();       // run burnin
     void posterior_sample(); // sample from stationary distribution
+    Rcpp::List get_chains(); // return stored chains
 
 };
 

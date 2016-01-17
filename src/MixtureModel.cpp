@@ -54,6 +54,11 @@ void MixtureModel::posterior_sample() {
     }
 }
 
+// get stored chains
+Rcpp::List MixtureModel::get_chains() {
+    return Rcpp::List::create(Rcpp::Named("theta")=_theta_chain);
+}
+
 // update the means of the components
 void MixtureModel::update_theta(bool save) {
     // initialize proposed value and log r
