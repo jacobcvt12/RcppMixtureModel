@@ -51,7 +51,7 @@ std::vector<int> rmultinom(int n, arma::vec p) {
     return multi;
 }
 
-std::vector<int> sample(int n, int k) {
+std::vector<int> rz(unsigned int n, unsigned int k) {
     std::vector<int> S(n);
     arma::vec prob_window(k);
     prob_window.fill(1. / (double) k);

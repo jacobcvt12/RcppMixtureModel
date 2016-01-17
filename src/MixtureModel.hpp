@@ -1,7 +1,9 @@
 #ifndef _MIXTUREMODEL_H_
 #define _MIXTUREMODEL_H_
 
+#include "distributions.hpp"
 #include <RcppArmadillo.h>
+#include <vector>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 class MixtureModel {
@@ -13,12 +15,13 @@ class MixtureModel {
 
     // data
     arma::vec _data;
+    unsigned int _n;
 
     // parameters
     arma::vec _theta;       // means
     arma::vec _sigma;       // variances
     arma::vec _lambda;      // proportions
-    arma::vec _z;           // latent assignment
+    std::vector<int> _z;    // latent assignment
 
     void update_theta();
     void update_sigma();
