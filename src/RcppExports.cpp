@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // run_model
-Rcpp::List run_model(arma::vec data, unsigned int k, unsigned int thin, unsigned int burnin, unsigned int sample);
-RcppExport SEXP RcppMixtureModel_run_model(SEXP dataSEXP, SEXP kSEXP, SEXP thinSEXP, SEXP burninSEXP, SEXP sampleSEXP) {
+Rcpp::List run_model(arma::vec data, unsigned int k, unsigned int thin, unsigned int burnin, unsigned int sample, unsigned int cores);
+RcppExport SEXP RcppMixtureModel_run_model(SEXP dataSEXP, SEXP kSEXP, SEXP thinSEXP, SEXP burninSEXP, SEXP sampleSEXP, SEXP coresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -17,7 +17,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type thin(thinSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type burnin(burninSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type sample(sampleSEXP);
-    __result = Rcpp::wrap(run_model(data, k, thin, burnin, sample));
+    Rcpp::traits::input_parameter< unsigned int >::type cores(coresSEXP);
+    __result = Rcpp::wrap(run_model(data, k, thin, burnin, sample, cores));
     return __result;
 END_RCPP
 }

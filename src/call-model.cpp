@@ -1,20 +1,37 @@
 #include "MixtureModel.hpp"
+#include <omp.h>
+
+// [[Rcpp::plugins(openmp)]]
 
 // [[Rcpp::export]]
 Rcpp::List run_model(arma::vec data, unsigned int k, unsigned int thin,
-                     unsigned int burnin, unsigned int sample) {
-    MixtureModel model(data, k, thin, burnin, sample);
+                     unsigned int burnin, unsigned int sample,
+                     unsigned int cores) {
+    arma::cube theta(sample, k, cores);
+    arma::cube sigma(sample, k, cores);
+    arma::cube z(sample, data.size(), cores);
 
-    // run MCMC
-    model.run_burnin();
-    model.posterior_sample();
+    #pragma omp parallel for num_threads(cores)
+    for (int i = 0; i < cores; ++i) {
+        // initialize model
+        MixtureModel model(data, k, thin, burnin, sample);
 
-    // get chains and return them
-    std::map<std::string, arma::mat> chains = model.get_chains();
-    Rcpp::List chains_list;
-    chains_list["theta"] = chains["theta"];
-    chains_list["sigma"] = chains["sigma"];
-    chains_list["z"] = chains["z"];
+        // run MCMC
+        model.run_burnin();
+        model.posterior_sample();
         
+        // get chains and return them
+        std::map<std::string, arma::mat> chains = model.get_chains();
+        theta.slice(i) = chains["theta"];
+        sigma.slice(i) = chains["sigma"];
+        z.slice(i) = chains["z"];
+    }
+
+    // create list to store chains of parameter estimates
+    Rcpp::List chains_list;
+    chains_list["theta"] = theta;
+    chains_list["sigma"] = sigma;
+    chains_list["z"] = z;
+
     return chains_list;
 }
