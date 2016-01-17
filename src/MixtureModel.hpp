@@ -26,9 +26,9 @@ class MixtureModel {
     void update_z();
 
   public:
+    // constructor and destructor
     MixtureModel(arma::vec data, unsigned int k,
                  unsigned int burnin, unsigned int sample);
-
     ~MixtureModel();
 
     // main methods
