@@ -64,10 +64,13 @@ void MixtureModel::posterior_sample() {
 }
 
 // get stored chains
-Rcpp::List MixtureModel::get_chains() {
-    return Rcpp::List::create(Rcpp::Named("theta")=_theta_chain,
-                              Rcpp::Named("sigma")=_sigma_chain,
-                              Rcpp::Named("z")=_z_chain);
+std::map<std::string, arma::mat> MixtureModel::get_chains() {
+    std::map<std::string, arma::mat> chains;
+    chains["theta"] = _theta_chain;
+    chains["sigma"] = _sigma_chain;
+    chains["z"] = arma::conv_to<arma::mat>::from(_z_chain);
+
+    return chains;
 }
 
 // update the means of the components

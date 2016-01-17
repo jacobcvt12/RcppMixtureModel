@@ -9,5 +9,8 @@ Rcpp::List run_model(arma::vec data, unsigned int k, unsigned int thin,
     model.run_burnin();
     model.posterior_sample();
 
-    return model.get_chains();
+    std::map<std::string, arma::mat> chains = model.get_chains();
+    return Rcpp::List::create(Rcpp::Named("theta")=chains["theta"],
+                              Rcpp::Named("sigma")=chains["sigma"],
+                              Rcpp::Named("z")=chains["z"]);
 }

@@ -4,8 +4,9 @@
 #include "distributions.hpp"
 #include <RcppArmadillo.h>
 #include <vector>
-#include <iostream>
 #include <algorithm>
+#include <map>
+#include <string>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 class MixtureModel {
@@ -49,7 +50,7 @@ class MixtureModel {
     // main methods
     void run_burnin();       // run burnin
     void posterior_sample(); // sample from stationary distribution
-    Rcpp::List get_chains(); // return stored chains
+    std::map<std::string, arma::mat> get_chains(); // return stored chains
 
 };
 
