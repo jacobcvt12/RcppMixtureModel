@@ -1,4 +1,4 @@
-devtools::load_all()
+library(RcppMixtureModel)
 
 theta <- c(5, 22, 40)
 sigma <- c(2, 3, 1.5)
