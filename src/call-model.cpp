@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include "MixtureModel.hpp"
 
 // [[Rcpp::export]]

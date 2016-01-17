@@ -3,7 +3,6 @@
 
 #include "distributions.hpp"
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
 #include <vector>
 // [[Rcpp::depends(RcppArmadillo)]]
 
