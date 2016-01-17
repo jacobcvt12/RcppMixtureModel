@@ -1,10 +1,9 @@
 #include "MixtureModel.hpp"
 
 // [[Rcpp::export]]
-Rcpp::List run_model(arma::vec data, unsigned int k,
-                     arma::ivec z,
+Rcpp::List run_model(arma::vec data, unsigned int k, unsigned int thin,
                      unsigned int burnin, unsigned int sample) {
-    MixtureModel model(data, k, z, burnin, sample);
+    MixtureModel model(data, k, thin, burnin, sample);
 
     // run MCMC
     model.run_burnin();

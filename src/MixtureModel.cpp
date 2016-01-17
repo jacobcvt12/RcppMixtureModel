@@ -2,7 +2,7 @@
 #include <algorithm>
 
 // constructor
-MixtureModel::MixtureModel(arma::vec data, unsigned int k,
+MixtureModel::MixtureModel(arma::vec data, unsigned int k, unsigned int thin,
                            unsigned int burnin, unsigned int sample) {
     // assign data
     _data = data;    
@@ -11,6 +11,7 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     // assign MCMC parameters
     _nBurn = burnin;
     _nSample = sample;
+    _nThin = thin;
     _k = k;
     _s = 0;
     _b = 0;
@@ -27,13 +28,7 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     // reallocate chains for parameters
     _theta_chain.resize(_nSample, _k);
     _sigma_chain.resize(_nSample, _k);
-}
-
-MixtureModel::MixtureModel(arma::vec data, unsigned int k,
-                           arma::ivec z,
-                           unsigned int burnin, unsigned int sample) :
-    MixtureModel(data, k, burnin, sample) {
-    _z = z;
+    _z_chain.resize(_nSample, _n);
 }
 
 // destructor (empty for now)
@@ -45,6 +40,7 @@ void MixtureModel::run_burnin() {
     while (_b < _nBurn) {
         update_theta();
         update_sigma();
+        update_z();
         _b++;
     }
 }
@@ -52,16 +48,26 @@ void MixtureModel::run_burnin() {
 // run burnin
 void MixtureModel::posterior_sample() {
     while (_s < _nSample) {
+        // update and save parameters
         update_theta(true);
         update_sigma(true);
+        update_z(true);
         _s++;
+
+        // run _nThin thinning intervals
+        for (int i = 0; i < _nThin; ++i) {
+            update_theta();
+            update_sigma();
+            update_z();
+        }
     }
 }
 
 // get stored chains
 Rcpp::List MixtureModel::get_chains() {
     return Rcpp::List::create(Rcpp::Named("theta")=_theta_chain,
-                              Rcpp::Named("sigma")=_sigma_chain);
+                              Rcpp::Named("sigma")=_sigma_chain,
+                              Rcpp::Named("z")=_z_chain);
 }
 
 // update the means of the components
@@ -134,24 +140,28 @@ void MixtureModel::update_sigma(bool save) {
 }
 
 // update the latent assignments
-void MixtureModel::update_z() {
+void MixtureModel::update_z(bool save) {
     // initialize proposed value and log r
     arma::ivec z_star;
     double log_r;
 
-    for (int i = 0; i < _k; ++i) {
-        // propose new latent assignments
-        //z_star = rmultinom_cpp(_n, _lambda);
+    // propose new latent assignments
+    z_star = rz_cpp(_n, _k);
 
-        //// calculate log acceptance probability
-        //log_r = dnorm(y_this_z, theta_star, _sigma[i]) + 
-                //dnorm(theta_star, _theta[i], _delta_theta);
-        //log_r -= dnorm(y_this_z, _theta[i], _sigma[i]) +
-                 //dnorm(_theta[i], theta_star, _delta_theta);
+    // iterate over all of the z's
+    for (int i = 0; i < _n; ++i) {
+        // calculate log acceptance probability
+        log_r = dnorm_cpp(_data[i], _theta[z_star[i]], 1. / _sigma[z_star[i]]) -
+                dnorm_cpp(_data[i], _theta[_z[i]], 1. / _sigma[_z[i]]);
+        // NB: Q(z'|z) = Q(z|z') so this isn't factored into acceptance probability
 
-        //// probabilistically accept theta_star
-        //if (log(arma::randu<double>()) < log_r) {
-            //_theta[i] = theta_star;
-        //}
+        // probabilistically accept theta_star
+        if ((log(arma::randu<double>()) < log_r) && (z_star[i] != _z[i])) {
+            _z[i] = z_star[i];
+        }
+    }
+
+    if (save) {
+        _z_chain.row(_s) = _z.t();
     }
 }

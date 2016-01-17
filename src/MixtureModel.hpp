@@ -13,6 +13,7 @@ class MixtureModel {
     // MCMC parameters
     unsigned int _nBurn;     // number of burnin iterations
     unsigned int _nSample;   // number of posterior samples
+    unsigned int _nThin;     // number of thinning intervals
     unsigned int _k;         // number of components
     unsigned int _s;         // current posterior iteration
     unsigned int _b;         // current burnin iteration
@@ -33,17 +34,15 @@ class MixtureModel {
     // stored chains
     arma::mat _theta_chain;       // means
     arma::mat _sigma_chain;       // variances
+    arma::imat _z_chain;           // component
 
     void update_theta(bool save=false);
     void update_sigma(bool save=false);
-    void update_z();
+    void update_z(bool save=false);
 
   public:
     // constructor and destructor
-    MixtureModel(arma::vec data, unsigned int k,
-                 unsigned int burnin, unsigned int sample);
-    MixtureModel(arma::vec data, unsigned int k,
-                 arma::ivec z,
+    MixtureModel(arma::vec data, unsigned int k, unsigned int thin,
                  unsigned int burnin, unsigned int sample);
     ~MixtureModel();
 
