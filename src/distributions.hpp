@@ -14,6 +14,10 @@ double dnorm_cpp(double y, double mean=0.0, double variance=1.0);
 // gamma random variables
 double dgamma_cpp(double y, double shape, double scale);
 
+// unif random variable
+double runif_cpp(double a, double b);
+double dunif_cpp(double a, double b);
+
 // other RVs
 arma::vec rdirichlet_cpp(arma::vec alpha);
 arma::ivec rmultinom_cpp(int n, arma::vec p);

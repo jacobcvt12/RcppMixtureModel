@@ -36,6 +36,16 @@ double dgamma_cpp(double y, double shape, double scale) {
     return log_lik;
 }
 
+double runif_cpp(double a, double b) {
+    double u = arma::randu();
+
+    return a + (b - a) * u;
+}
+
+double dunif_cpp(double a, double b) {
+    return -log(b - a);
+}
+
 arma::vec rdirichlet_cpp(arma::vec alpha) {
     arma::vec Y(alpha.size());
     arma::vec X(alpha.size());
