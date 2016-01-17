@@ -38,6 +38,22 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     _z = z;
 }
 
+// run burnin
+void MixtureModel::run_burnin() {
+    while (_b < _nBurn) {
+        update_theta();
+        _b++;
+    }
+}
+
+// run burnin
+void MixtureModel::posterior_sample() {
+    while (_s < _nSample) {
+        update_theta(true);
+        _s++;
+    }
+}
+
 // update the means of the components
 void MixtureModel::update_theta(bool save) {
     // initialize proposed value and log r
