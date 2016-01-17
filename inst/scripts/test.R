@@ -10,4 +10,4 @@ z <- c(rep(0, n * lambda[1]),
        rep(1, n * lambda[2]))
 
 out <- run_model(y, 2, sigma, lambda, z, 10000, 5000)
-head(out$theta)
+summary(out$theta)
