@@ -86,11 +86,11 @@ void MixtureModel::update_theta(bool save) {
         if (log(arma::randu<double>()) < log_r) {
             _theta[i] = theta_star;
         }
+    }
 
-        // if burnin complete, save parameter in chain
-        if (save) {
-            _theta_chain(_s, i) = _theta[i];
-        }
+    // if burnin complete, save parameter in chain
+    if (save) {
+        _theta_chain.row(_s) = _theta.t();
     }
 }
 
