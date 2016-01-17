@@ -72,6 +72,7 @@ arma::ivec rmultinom_cpp(int n, arma::vec p) {
     arma::vec p_sum = arma::cumsum(p);
     arma::vec draws = arma::randu(n);
     arma::ivec multi(p.size());
+    multi.fill(0);
 
     for (int i = 0; i < n; ++i) {
         for (int k = 0; k < p.size(); ++k) {
