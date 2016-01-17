@@ -9,10 +9,9 @@ y <- c(rnorm(n * lambda[1], theta[1], sqrt(sigma[1])),
        rnorm(n * lambda[3], theta[3], sqrt(sigma[3])))
 
 system.time({
-out <- run_model(sample(y), 3, 5, 5000, 1000)
+    out <- run.model(y, k=3, cores=1)
 })
-summary(out$theta)
-s <- 1 / out$sigma
-summary(s)
-z <- out$z
-plot(density(colMeans(z)))
+
+system.time({
+    out <- run.model(y, k=3, cores=3)
+})
