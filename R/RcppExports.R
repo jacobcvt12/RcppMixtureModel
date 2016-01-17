@@ -5,3 +5,11 @@ run_model <- function(data, k, sigma, lambda, z, burnin, sample) {
     .Call('RcppMixtureModel_run_model', PACKAGE = 'RcppMixtureModel', data, k, sigma, lambda, z, burnin, sample)
 }
 
+rmultinom_cpp <- function(n, p) {
+    .Call('RcppMixtureModel_rmultinom_cpp', PACKAGE = 'RcppMixtureModel', n, p)
+}
+
+rz_cpp <- function(n, k) {
+    .Call('RcppMixtureModel_rz_cpp', PACKAGE = 'RcppMixtureModel', n, k)
+}
+

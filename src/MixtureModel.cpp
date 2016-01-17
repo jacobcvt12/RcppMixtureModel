@@ -15,13 +15,13 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     _b = 0;
 
     // tuning parameters
-    _delta_theta = 2.5;
+    _delta_theta = 1.0;
 
     // initial values to parameters from prior
-    _theta = rnorm(_k, 0.0, 1000.0);
+    _theta = rnorm_cpp(_k, 0.0, 10.0);
     _sigma = arma::randg(_k, arma::distr_param(1, 1));
-    _lambda = rdirichlet(_k, arma::vec(_k).fill(1));
-    _z = rz(_n, _k);
+    _lambda = rdirichlet_cpp(arma::vec(_k).fill(1));
+    _z = rz_cpp(_n, _k);
 
     // reallocate chains for parameters
     _theta_chain.resize(_nSample, _k);
@@ -74,13 +74,13 @@ void MixtureModel::update_theta(bool save) {
         arma::vec y_this_z = _data.elem(arma::find(_z == i));
 
         // propose new thetas
-        theta_star = arma::conv_to<double>::from(rnorm(1, _theta[i], _delta_theta));
+        theta_star = arma::conv_to<double>::from(rnorm_cpp(1, _theta[i], _delta_theta));
 
         // calculate log acceptance probability
-        log_r = dnorm(y_this_z, theta_star, _sigma[i]) + 
-                dnorm(theta_star, 0, 100);
-        log_r -= dnorm(y_this_z, _theta[i], _sigma[i]) +
-                 dnorm(_theta[i], 0, 100);
+        log_r = dnorm_cpp_vec(y_this_z, theta_star, _sigma[i]) + 
+                dnorm_cpp(theta_star, 0, 10);
+        log_r -= dnorm_cpp_vec(y_this_z, _theta[i], _sigma[i]) +
+                 dnorm_cpp(_theta[i], 0, 10);
 
         // probabilistically accept theta_star
         if (log(arma::randu<double>()) < log_r) {
@@ -89,7 +89,7 @@ void MixtureModel::update_theta(bool save) {
 
         // if burnin complete, save parameter in chain
         if (save) {
-            _theta_chain[_s, i] = _theta[i];
+            _theta_chain(_s, i) = _theta[i];
         }
     }
 }
@@ -102,7 +102,7 @@ void MixtureModel::update_z() {
 
     for (int i = 0; i < _k; ++i) {
         // propose new latent assignments
-        z_star = rmultinom(_n, _lambda);
+        z_star = rmultinom_cpp(_n, _lambda);
 
         //// calculate log acceptance probability
         //log_r = dnorm(y_this_z, theta_star, _sigma[i]) + 

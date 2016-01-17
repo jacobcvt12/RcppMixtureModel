@@ -23,3 +23,27 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// rmultinom_cpp
+arma::ivec rmultinom_cpp(int n, arma::vec p);
+RcppExport SEXP RcppMixtureModel_rmultinom_cpp(SEXP nSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type p(pSEXP);
+    __result = Rcpp::wrap(rmultinom_cpp(n, p));
+    return __result;
+END_RCPP
+}
+// rz_cpp
+arma::ivec rz_cpp(unsigned int n, unsigned int k);
+RcppExport SEXP RcppMixtureModel_rz_cpp(SEXP nSEXP, SEXP kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< unsigned int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type k(kSEXP);
+    __result = Rcpp::wrap(rz_cpp(n, k));
+    return __result;
+END_RCPP
+}

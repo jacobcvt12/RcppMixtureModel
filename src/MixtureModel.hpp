@@ -4,6 +4,7 @@
 #include "distributions.hpp"
 #include <RcppArmadillo.h>
 #include <vector>
+#include <iostream>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 class MixtureModel {

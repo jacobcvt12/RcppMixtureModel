@@ -1,6 +1,6 @@
 #include "distributions.hpp"
 
-arma::vec rnorm(int n, double mean, double variance) {
+arma::vec rnorm_cpp(int n, double mean, double variance) {
     arma::vec draws = arma::randn(n, 1);
 
     // multiply by sqrt of variance
@@ -12,24 +12,24 @@ arma::vec rnorm(int n, double mean, double variance) {
     return draws;
 }
 
-double dnorm(arma::vec y, double mean, double variance) {
+double dnorm_cpp_vec(arma::vec y, double mean, double variance) {
     double n = y.size();
     double log_lik; 
-    log_lik = (-n / 2.) * (log(variance) + log(2 * M_PI)) - 
+    log_lik = -n * log(sqrt(variance)) - n * 0.5 * log(2 * M_PI) - 
               arma::sum(arma::square(y - mean)) / (2. * variance);
     
     return log_lik;
 }
 
-double dnorm(double y, double mean, double variance) {
+double dnorm_cpp(double y, double mean, double variance) {
     double log_lik; 
-    log_lik = (-1. / 2.) * (log(variance) + log(2 * M_PI)) - 
+    log_lik = -log(sqrt(variance)) - 0.5 * log(2 * M_PI) - 
               pow(y - mean, 2.) / (2. * variance);
     
     return log_lik;
 }
 
-arma::vec rdirichlet(int n, arma::vec alpha) {
+arma::vec rdirichlet_cpp(arma::vec alpha) {
     arma::vec Y(alpha.size());
     arma::vec X(alpha.size());
 
@@ -51,7 +51,7 @@ arma::vec rdirichlet(int n, arma::vec alpha) {
     return X;
 }
 
-arma::ivec rmultinom(int n, arma::vec p) {
+arma::ivec rmultinom_cpp(int n, arma::vec p) {
     arma::vec p_sum = arma::cumsum(p);
     arma::vec draws = arma::randu(n);
     arma::ivec multi(p.size());
@@ -68,7 +68,7 @@ arma::ivec rmultinom(int n, arma::vec p) {
     return multi;
 }
 
-arma::ivec rz(unsigned int n, unsigned int k) {
+arma::ivec rz_cpp(unsigned int n, unsigned int k) {
     arma::ivec S(n);
     arma::vec prob_window(k);
     prob_window.fill(1. / (double) k);
