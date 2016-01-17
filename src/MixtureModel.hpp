@@ -5,6 +5,7 @@
 #include <RcppArmadillo.h>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 class MixtureModel {
@@ -22,6 +23,7 @@ class MixtureModel {
 
     // tuning parameters
     double _delta_theta;
+    double _delta_sigma;
 
     // parameters
     arma::vec _theta;       // means
@@ -44,7 +46,7 @@ class MixtureModel {
     MixtureModel(arma::vec data, unsigned int k,
                  unsigned int burnin, unsigned int sample);
     MixtureModel(arma::vec data, unsigned int k,
-                 arma::vec sigma, arma::vec lambda, arma::ivec z,
+                 arma::vec lambda, arma::ivec z,
                  unsigned int burnin, unsigned int sample);
     ~MixtureModel();
 

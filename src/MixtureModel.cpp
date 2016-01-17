@@ -1,4 +1,5 @@
 #include "MixtureModel.hpp"
+#include <algorithm>
 
 // constructor
 MixtureModel::MixtureModel(arma::vec data, unsigned int k,
@@ -16,6 +17,7 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
 
     // tuning parameters
     _delta_theta = 1.0;
+    _delta_sigma = 0.5;
 
     // initial values to parameters from prior
     _theta = rnorm_cpp(_k, 0.0, 10.0);
@@ -30,10 +32,9 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
 }
 
 MixtureModel::MixtureModel(arma::vec data, unsigned int k,
-                           arma::vec sigma, arma::vec lambda, arma::ivec z,
+                           arma::vec lambda, arma::ivec z,
                            unsigned int burnin, unsigned int sample) :
     MixtureModel(data, k, burnin, sample) {
-    _sigma = sigma;
     _lambda = lambda;
     _z = z;
 }
@@ -46,6 +47,7 @@ MixtureModel::~MixtureModel() {
 void MixtureModel::run_burnin() {
     while (_b < _nBurn) {
         update_theta();
+        update_sigma();
         _b++;
     }
 }
@@ -54,13 +56,15 @@ void MixtureModel::run_burnin() {
 void MixtureModel::posterior_sample() {
     while (_s < _nSample) {
         update_theta(true);
+        update_sigma(true);
         _s++;
     }
 }
 
 // get stored chains
 Rcpp::List MixtureModel::get_chains() {
-    return Rcpp::List::create(Rcpp::Named("theta")=_theta_chain);
+    return Rcpp::List::create(Rcpp::Named("theta")=_theta_chain,
+                              Rcpp::Named("sigma")=_sigma_chain);
 }
 
 // update the means of the components
@@ -77,9 +81,9 @@ void MixtureModel::update_theta(bool save) {
         theta_star = arma::conv_to<double>::from(rnorm_cpp(1, _theta[i], _delta_theta));
 
         // calculate log acceptance probability
-        log_r = dnorm_cpp_vec(y_this_z, theta_star, _sigma[i]) + 
+        log_r = dnorm_cpp_vec(y_this_z, theta_star, 1. / _sigma[i]) + 
                 dnorm_cpp(theta_star, 0, 10);
-        log_r -= dnorm_cpp_vec(y_this_z, _theta[i], _sigma[i]) +
+        log_r -= dnorm_cpp_vec(y_this_z, _theta[i], 1. / _sigma[i]) +
                  dnorm_cpp(_theta[i], 0, 10);
 
         // probabilistically accept theta_star
@@ -93,6 +97,42 @@ void MixtureModel::update_theta(bool save) {
     // if burnin complete, save parameter in chain
     if (save) {
         _theta_chain.row(_s) = _theta.t();
+    }
+}
+
+// update the variances of the components
+void MixtureModel::update_sigma(bool save) {
+    // initialize proposed value and log r
+    double sigma_star;
+    double log_r;
+
+    for (int i = 0; i < _k; ++i) {
+        // get only y's from this component
+        arma::vec y_this_z = _data.elem(arma::find(_z == i));
+
+        // propose new variances (precision actually)
+        sigma_star = runif_cpp(std::max(0., _sigma[i] - _delta_sigma),
+                               _sigma[i] + _delta_sigma);
+
+        // calculate log acceptance probability
+        log_r = dnorm_cpp_vec(y_this_z, _theta[i], 1. / sigma_star) + 
+                dgamma_cpp(sigma_star, 1, 1) + 
+                dunif_cpp(std::max(0., sigma_star - _delta_sigma),
+                          sigma_star + _delta_sigma);
+        log_r -= dnorm_cpp_vec(y_this_z, _theta[i], 1. / _sigma[i]) +
+                 dgamma_cpp(_sigma[i], 1, 1) +
+                 dunif_cpp(std::max(0., _sigma[i] - _delta_sigma),
+                           _sigma[i] + _delta_sigma);
+
+        // probabilistically accept theta_star
+        if (log(arma::randu<double>()) < log_r) {
+            _sigma[i] = sigma_star;
+        }
+    }
+
+    // if burnin complete, save parameter in chain
+    if (save) {
+        _sigma_chain.row(_s) = _sigma.t();
     }
 }
 
