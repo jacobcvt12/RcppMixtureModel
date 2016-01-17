@@ -19,8 +19,8 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
 
     // initial values to parameters from prior
     _theta = rnorm(_k, 0.0, 1000.0);
-    _sigma = arma::vec(std::vector<double> {2.5, 2.5, 2.5}); // consider known
-    _lambda = arma::vec(std::vector<double> {0.2, 0.3, 0.5}); // consider known
+    _sigma = arma::randg(_k, arma::distr_param(1, 1));
+    _lambda = rdirichlet(_k, arma::vec(_k).fill(1));
     _z = rz(_n, _k);
 
     // reallocate chains for parameters
