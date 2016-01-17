@@ -38,6 +38,10 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     _z = z;
 }
 
+// destructor (empty for now)
+MixtureModel::~MixtureModel() {
+}
+
 // run burnin
 void MixtureModel::run_burnin() {
     while (_b < _nBurn) {
