@@ -29,6 +29,15 @@ MixtureModel::MixtureModel(arma::vec data, unsigned int k,
     _lambda_chain.resize(_nSample, _k);
 }
 
+MixtureModel::MixtureModel(arma::vec data, unsigned int k,
+                           arma::vec sigma, arma::vec lambda, arma::ivec z,
+                           unsigned int burnin, unsigned int sample) :
+    MixtureModel(data, k, burnin, sample) {
+    _sigma = sigma;
+    _lambda = lambda;
+    _z = z;
+}
+
 // update the means of the components
 void MixtureModel::update_theta(bool save) {
     // initialize proposed value and log r

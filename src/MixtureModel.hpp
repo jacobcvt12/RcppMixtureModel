@@ -42,6 +42,9 @@ class MixtureModel {
     // constructor and destructor
     MixtureModel(arma::vec data, unsigned int k,
                  unsigned int burnin, unsigned int sample);
+    MixtureModel(arma::vec data, unsigned int k,
+                 arma::vec sigma, arma::vec lambda, arma::ivec z,
+                 unsigned int burnin, unsigned int sample);
     ~MixtureModel();
 
     // main methods
