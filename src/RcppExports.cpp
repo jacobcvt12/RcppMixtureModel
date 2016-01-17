@@ -7,43 +7,18 @@
 using namespace Rcpp;
 
 // run_model
-Rcpp::List run_model(arma::vec data, unsigned int k, arma::vec sigma, arma::vec lambda, arma::ivec z, unsigned int burnin, unsigned int sample);
-RcppExport SEXP RcppMixtureModel_run_model(SEXP dataSEXP, SEXP kSEXP, SEXP sigmaSEXP, SEXP lambdaSEXP, SEXP zSEXP, SEXP burninSEXP, SEXP sampleSEXP) {
+Rcpp::List run_model(arma::vec data, unsigned int k, arma::vec lambda, arma::ivec z, unsigned int burnin, unsigned int sample);
+RcppExport SEXP RcppMixtureModel_run_model(SEXP dataSEXP, SEXP kSEXP, SEXP lambdaSEXP, SEXP zSEXP, SEXP burninSEXP, SEXP sampleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::vec >::type data(dataSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type k(kSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< arma::ivec >::type z(zSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type burnin(burninSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type sample(sampleSEXP);
-    __result = Rcpp::wrap(run_model(data, k, sigma, lambda, z, burnin, sample));
-    return __result;
-END_RCPP
-}
-// rmultinom_cpp
-arma::ivec rmultinom_cpp(int n, arma::vec p);
-RcppExport SEXP RcppMixtureModel_rmultinom_cpp(SEXP nSEXP, SEXP pSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type p(pSEXP);
-    __result = Rcpp::wrap(rmultinom_cpp(n, p));
-    return __result;
-END_RCPP
-}
-// rz_cpp
-arma::ivec rz_cpp(unsigned int n, unsigned int k);
-RcppExport SEXP RcppMixtureModel_rz_cpp(SEXP nSEXP, SEXP kSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< unsigned int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type k(kSEXP);
-    __result = Rcpp::wrap(rz_cpp(n, k));
+    __result = Rcpp::wrap(run_model(data, k, lambda, z, burnin, sample));
     return __result;
 END_RCPP
 }
