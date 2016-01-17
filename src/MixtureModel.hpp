@@ -28,17 +28,14 @@ class MixtureModel {
     // parameters
     arma::vec _theta;       // means
     arma::vec _sigma;       // variances
-    arma::vec _lambda;      // proportions
     arma::ivec _z;    // latent assignment
 
     // stored chains
     arma::mat _theta_chain;       // means
     arma::mat _sigma_chain;       // variances
-    arma::mat _lambda_chain;      // proportions
 
     void update_theta(bool save=false);
     void update_sigma(bool save=false);
-    void update_lambda(bool save=false);
     void update_z();
 
   public:
@@ -46,7 +43,7 @@ class MixtureModel {
     MixtureModel(arma::vec data, unsigned int k,
                  unsigned int burnin, unsigned int sample);
     MixtureModel(arma::vec data, unsigned int k,
-                 arma::vec lambda, arma::ivec z,
+                 arma::ivec z,
                  unsigned int burnin, unsigned int sample);
     ~MixtureModel();
 
