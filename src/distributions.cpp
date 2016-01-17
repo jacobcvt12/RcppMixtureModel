@@ -29,6 +29,13 @@ double dnorm_cpp(double y, double mean, double variance) {
     return log_lik;
 }
 
+double dgamma_cpp(double y, double shape, double scale) {
+    double log_lik = (shape - 1.) * log(y) - 1. / scale * y - 
+                     shape * log(scale) - lgamma(shape);
+
+    return log_lik;
+}
+
 arma::vec rdirichlet_cpp(arma::vec alpha) {
     arma::vec Y(alpha.size());
     arma::vec X(alpha.size());
