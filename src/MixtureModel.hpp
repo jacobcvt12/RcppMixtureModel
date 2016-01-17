@@ -19,6 +19,9 @@ class MixtureModel {
     arma::vec _data;
     unsigned int _n;
 
+    // tuning parameters
+    double _delta_theta;
+
     // parameters
     arma::vec _theta;       // means
     arma::vec _sigma;       // variances

@@ -12,6 +12,23 @@ arma::vec rnorm(int n, double mean, double variance) {
     return draws;
 }
 
+double dnorm(arma::vec y, double mean, double variance) {
+    double n = y.size();
+    double log_lik; 
+    log_lik = (-n / 2.) * (log(variance) + log(2 * M_PI)) - 
+              arma::sum(arma::square(y - mean)) / (2. * variance);
+    
+    return log_lik;
+}
+
+double dnorm(double y, double mean, double variance) {
+    double log_lik; 
+    log_lik = (-1. / 2.) * (log(variance) + log(2 * M_PI)) - 
+              pow(y - mean, 2.) / (2. * variance);
+    
+    return log_lik;
+}
+
 arma::vec rdirichlet(int n, arma::vec alpha) {
     arma::vec Y(alpha.size());
     arma::vec X(alpha.size());
