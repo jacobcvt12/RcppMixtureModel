@@ -26,7 +26,12 @@ class MixtureModel {
     arma::vec _theta;       // means
     arma::vec _sigma;       // variances
     arma::vec _lambda;      // proportions
-    std::vector<int> _z;    // latent assignment
+    arma::ivec _z;    // latent assignment
+
+    // stored chains
+    arma::mat _theta_chain;       // means
+    arma::mat _sigma_chain;       // variances
+    arma::mat _lambda_chain;      // proportions
 
     void update_theta(bool save=false);
     void update_sigma(bool save=false);

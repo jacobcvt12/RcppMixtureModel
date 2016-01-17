@@ -51,10 +51,10 @@ arma::vec rdirichlet(int n, arma::vec alpha) {
     return X;
 }
 
-std::vector<int> rmultinom(int n, arma::vec p) {
+arma::ivec rmultinom(int n, arma::vec p) {
     arma::vec p_sum = arma::cumsum(p);
     arma::vec draws = arma::randu(n);
-    std::vector<int> multi(p.size());
+    arma::ivec multi(p.size());
 
     for (int i = 0; i < n; ++i) {
         for (int k = 0; k < p.size(); ++k) {
@@ -68,8 +68,8 @@ std::vector<int> rmultinom(int n, arma::vec p) {
     return multi;
 }
 
-std::vector<int> rz(unsigned int n, unsigned int k) {
-    std::vector<int> S(n);
+arma::ivec rz(unsigned int n, unsigned int k) {
+    arma::ivec S(n);
     arma::vec prob_window(k);
     prob_window.fill(1. / (double) k);
     prob_window = arma::cumsum(prob_window);
