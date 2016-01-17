@@ -9,9 +9,9 @@ y <- c(rnorm(n * lambda[1], theta[1], sqrt(sigma[1])),
        rnorm(n * lambda[3], theta[3], sqrt(sigma[3])))
 
 system.time({
-    out <- run.model(y, k=3, cores=1)
+    out <- run.model(y, k=3, cores=1, burnin=5000, thin=2)
 })
 
 system.time({
-    out <- run.model(y, k=3, cores=3)
+    out <- run.model(y, k=3, cores=3, burnin=5000, thin=2)
 })
