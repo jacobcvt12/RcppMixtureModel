@@ -88,6 +88,8 @@ void MixtureModel::update_theta(bool save) {
         }
     }
 
+    _theta = arma::sort(_theta);
+
     // if burnin complete, save parameter in chain
     if (save) {
         _theta_chain.row(_s) = _theta.t();
